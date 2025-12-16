@@ -100,3 +100,30 @@ export async function buildOpportunityCard(url) {
     wordCount,
   };
 }
+
+// ---------------------------
+// SEO extraction for draft scans
+// ---------------------------
+export function extractSeoData(html = "") {
+  const cleanHtml = String(html || "");
+
+  // Title + meta description (same logic you already use)
+  const title = extractTitle(cleanHtml);
+  const description = extractMetaDescription(cleanHtml);
+
+  // Word count: basic HTML text extraction (no external API call)
+  // (Draft HTML is internal render; use light regex stripping)
+  const text = decodeHtmlEntities(
+    cleanHtml
+      .replace(/<script[\s\S]*?<\/script>/gi, " ")
+      .replace(/<style[\s\S]*?<\/style>/gi, " ")
+      .replace(/<!--[\s\S]*?-->/g, " ")
+      .replace(/<[^>]+>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+  );
+
+  const wordCount = text ? text.split(/\s+/).filter(Boolean).length : 0;
+
+  return { title, description, wordCount };
+}
