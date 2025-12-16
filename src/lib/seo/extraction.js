@@ -40,14 +40,14 @@ export async function fetchHtml(url) {
   };
 }
 
-export function extractTitle(html) {
-  const m = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+export function extractTitle(html = "") {
+  const m = String(html).match(/<title[^>]*>([\s\S]*?)<\/title>/i);
   if (!m) return "";
   return decodeHtmlEntities(m[1].replace(/\s+/g, " ").trim());
 }
 
-export function extractMetaDescription(html) {
-  const m = html.match(
+export function extractMetaDescription(html = "") {
+  const m = String(html).match(
     /<meta[^>]*name=["']description["'][^>]*content=["']([^"']*)["'][^>]*>/i
   );
   if (!m) return "";
@@ -102,17 +102,14 @@ export async function buildOpportunityCard(url) {
 }
 
 // ---------------------------
-// SEO extraction for draft scans
+// SEO extraction for draft scans (required by scan-draft.js)
 // ---------------------------
 export function extractSeoData(html = "") {
   const cleanHtml = String(html || "");
 
-  // Title + meta description (same logic you already use)
   const title = extractTitle(cleanHtml);
   const description = extractMetaDescription(cleanHtml);
 
-  // Word count: basic HTML text extraction (no external API call)
-  // (Draft HTML is internal render; use light regex stripping)
   const text = decodeHtmlEntities(
     cleanHtml
       .replace(/<script[\s\S]*?<\/script>/gi, " ")

@@ -23,7 +23,9 @@ export function enqueueDraftScan({ hostname, provider, payload } = {}) {
     provider: p,
   });
 
-  runDraftScan({ scanId: scan.scanId, hostname: h, provider: p, payload }).catch(() => {});
+  runDraftScan({ scanId: scan.scanId, hostname: h, provider: p, payload }).catch(
+    () => {}
+  );
   return scan;
 }
 
@@ -49,7 +51,7 @@ async function runDraftScan({ scanId, hostname, provider, payload }) {
       status: "complete",
       mode: "draft",
       diagnostics: { provider, source: "internal-render" },
-      blogs: [item], // you can also decide page vs blog by payload later
+      blogs: [item],
       pages: [],
     });
 
